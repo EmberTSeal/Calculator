@@ -1,4 +1,15 @@
 let num1, num2, operator;
+let operandString = [];
+
+const digits = Array.from(document.querySelector('#digits').children);
+const display = document.querySelector('#display');
+
+digits.forEach(digit => digit.addEventListener('click', function(){ 
+    operandString += digit.innerHTML
+    display.textContent = operandString ;
+}));
+
+
 
 let add = (a, b) => (a + b);
 
