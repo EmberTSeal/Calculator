@@ -9,7 +9,12 @@ digits.forEach(digit => digit.addEventListener('click', function(){
     display.textContent = operandString ;
 }));
 
+const clear = document.querySelector('#clear');
 
+clear.addEventListener('click', function(){
+    operandString = '';
+    display.textContent = '';
+});
 
 let add = (a, b) => (a + b);
 
