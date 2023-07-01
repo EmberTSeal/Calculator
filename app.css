@@ -4,6 +4,7 @@
 }
 
 body {
+    background-color: #000f1b;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -49,6 +50,11 @@ body {
     text-align: right;
 }
 
+#result{
+    text-align: right;
+    margin-top: 5px;
+    font-size: 25px;
+}
 
 button{
     background-color: #a2bbcf;

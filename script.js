@@ -3,6 +3,7 @@ let result = '';
 let lastResult = '';
 let operatorExist = false;
 let startnextOperation = false;
+let start = false;
 
 const digits = Array.from(document.querySelectorAll('.digit'));
 const display = document.querySelector('#display');
@@ -10,8 +11,13 @@ const operators = Array.from(document.querySelectorAll('.operator'));
 const equalBtn = document.querySelector('#equal');
 const clearBtn = document.querySelector('#clear');
 const previousAnswerBtn = document.querySelector('#ans');
+const res = document.querySelector('#result');
 
 digits.forEach(digit => digit.addEventListener('click', function () {
+    if(start === false){
+        start = true; 
+        display.textContent = '';
+    }
     if (startnextOperation === true) {
         clearFn();
     }
@@ -59,12 +65,14 @@ equalBtn.addEventListener('click', function () {
 clearBtn.addEventListener('click', clearFn);
 
 function clearFn() {
-    display.textContent = '';
+    start = false;
+    display.textContent = '0';
     startnextOperation = false;
     operatorExist = false;
     num1 = '';
     num2 = '';
     result = '';
+    res.textContent = '0';
 }
 
 previousAnswerBtn.addEventListener('click', function () {
@@ -110,11 +118,9 @@ function operate(num1, num2, operator) {
             break;
     }
     if (result !== 'Undefined') {
-        const res = document.createElement('div');
         if(!Number.isInteger(result))
             result = result.toPrecision(4);
-        res.textContent = result;
-        display.append(res);
+        res.innerHTML = result;
         startnextOperation = true;
         lastResult = result;
     }
