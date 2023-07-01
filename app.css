@@ -1,6 +1,61 @@
-#display{
-    height: 100px;
-    width: 300px;
+body{
+    margin-top: 50px;
+    display: flex;
+    flex-direction:  column;
+    justify-content: center;
+    align-items: center;
+}
+
+.calculator{
+    height: 550px;
+    width: 320px;
+    background-color: grey;
     border: 1px solid black;
+    border-radius: 10px;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction:  column;
+    justify-content: start;
+    align-items: center;
+}
+
+.all-buttons{
+    display: flex;
+    flex-direction: column;
+}
+
+.all-buttons > div{
+    display: flex;
+    flex-direction: row;
+}
+
+#display{
+    height: 180px;
+    width: 270px;
+    border: 1px solid black;
+    border-radius: 10px;
     background-color: azure;
+    margin: 5px;
+    padding: 20px;
+}
+
+
+
+button{
+    cursor: pointer;
+    border-radius: 10px;
+    width: 70px;
+    height: 70px;
+    margin: 5px;
+}
+
+.credits{
+    color: black;
+    border-radius: 20px;
+    border: 1px solid rgb(0,0,0 , 0.5);
+    padding: 10px 20px;
+}
+
+a{
+    color: black;
 }

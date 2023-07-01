@@ -4,9 +4,9 @@ let lastResult = '';
 let operatorExist = false;
 let startnextOperation = false;
 
-const digits = Array.from(document.querySelector('#digits').children);
+const digits = Array.from(document.querySelectorAll('.digit'));
 const display = document.querySelector('#display');
-const operators = Array.from(document.querySelector('#operators').children);
+const operators = Array.from(document.querySelectorAll('.operator'));
 const equalBtn = document.querySelector('#equal');
 const clearBtn = document.querySelector('#clear');
 const previousAnswerBtn = document.querySelector('#ans');

@@ -10,31 +10,44 @@
 </head>
 
 <body>
-    <div id="display"></div>
-    <div id="digits">
-        <button>1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>4</button>
-        <button>5</button>
-        <button>6</button>
-        <button>7</button>
-        <button>8</button>
-        <button>9</button>
-        <button>0</button>
+    <div class="calculator">
+        <div id="display"></div>
+        <div class="all-buttons">
+            <div class="row1">
+                <button id="clear">AC</button>
+                <button id="backspace"><-</button>
+                <button id="percentage">%</button>
+                <button id="equal">=</button>
+
+            </div>
+            <div class="row2">
+                <button class="digit">7</button>
+                <button class="digit">8</button>
+                <button class="digit">9</button>
+                <button class="operator">/</button>
+            </div>
+            <div class="row3">
+                <button class="digit">4</button>
+                <button class="digit">5</button>
+                <button class="digit">6</button>
+                <button class="operator">*</button>
+            </div>
+            <div class="row4">
+                <button class="digit">1</button>
+                <button class="digit">2</button>
+                <button class="digit">3</button>
+                <button class="operator">-</button>
+            </div>
+            <div class="row5">
+                <button class="dot">.</button>
+                <button class="digit">0</button>
+                <button id="ans">ANS</button>
+                <button class="operator">+</button>
+            </div>
+        </div>
     </div>
-    <br>
-    <div id="operators">
-        <button>+</button>
-        <button>-</button>
-        <button>*</button>
-        <button>/</button>
-    </div>
-    <div class="controls">
-        <button id="equal">=</button>
-        <button id="clear">AC</button>
-        <button id="ans">ANS</button>
-    </div>
+    <p class="credits"><a href="https://github.com/EmberTSeal">Trisha Seal</a> || 2023 || <a
+            href="https://www.theodinproject.com/about">The Odin Project</a></p>
 </body>
 
 </html>
