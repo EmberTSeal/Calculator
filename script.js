@@ -1,21 +1,21 @@
 let num1 = '', num2 = '', operator = '';
 let result;
 let operatorExist = false;
-let nextOperation = false;
+let startnextOperation = false;
+let lastResult;
 
 const digits = Array.from(document.querySelector('#digits').children);
 const display = document.querySelector('#display');
 const operators = Array.from(document.querySelector('#operators').children);
-const equal = document.querySelector('#equal');
-const clear = document.querySelector('#clear');
-
+const equalBtn = document.querySelector('#equal');
+const clearBtn = document.querySelector('#clear');
+const previousAnswerBtn = document.querySelector('#ans');
 
 digits.forEach(digit => digit.addEventListener('click', function () {
-    if(nextOperation === true){
-        nextOperation = false;
+    if (startnextOperation === true) {
         clearFn();
     }
-    if (operatorExist === false) {
+    else if (operatorExist === false) {
         num1 += digit.innerHTML;
     }
     else {
@@ -26,28 +26,51 @@ digits.forEach(digit => digit.addEventListener('click', function () {
 
 operators.forEach(operatorInArray =>
     operatorInArray.addEventListener('click', function () {
-        if (operatorExist === false) {
-            operator = operatorInArray.innerHTML;
-            operatorExist = true;
+        operator = operatorInArray.innerHTML;
+        if (startnextOperation === true) {
+            startnextOperation = false;
+            num1 = lastResult;
+            num2 = '';
+            display.textContent = num1 + ' ' + operator + ' ';
+        }
+        else if (operatorExist === false) {
             display.textContent += ' ' + operator + ' ';
         }
+        operatorExist = true;
+
     }));
 
-equal.addEventListener('click', function(){
-    if(num1!='' && num2!=''){
+equalBtn.addEventListener('click', function () {
+    if (num1 != '' && num2 != '') {
         operate(Number(num1), Number(num2), operator);
     }
 });
 
-clear.addEventListener('click', clearFn);
+clearBtn.addEventListener('click', clearFn);
 
-function clearFn(){
-        display.textContent = '';
-        operatorExist = false;
-        num1 = '';
-        num2 = '';
-        result = '';
+function clearFn() {
+    display.textContent = '';
+    startnextOperation = false;
+    operatorExist = false;
+    num1 = '';
+    num2 = '';
+    result = '';
 }
+
+previousAnswerBtn.addEventListener('click', function () {
+    if (startnextOperation === true) {
+        num1 = lastResult;
+        display.textContent = num1;
+    }
+    else if (operatorExist === false && startnextOperation === false) {
+        num1 += lastResult;
+        display.textContent = num1;
+    }
+    else if (operatorExist === true) {
+        num2 = lastResult;
+        display.textContent += num2;
+    }
+})
 
 let add = (a, b) => (a + b);
 
@@ -71,5 +94,6 @@ function operate(num1, num2, operator) {
     const res = document.createElement('div');
     res.textContent = result;
     display.append(res);
-    nextOperation = true;
+    startnextOperation = true;
+    lastResult = result;
 }
