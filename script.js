@@ -26,18 +26,28 @@ digits.forEach(digit => digit.addEventListener('click', function () {
 
 operators.forEach(operatorInArray =>
     operatorInArray.addEventListener('click', function () {
-        operator = operatorInArray.innerHTML;
         if (startnextOperation === true) {
+            operator = operatorInArray.innerHTML;
             startnextOperation = false;
             num1 = lastResult;
             num2 = '';
             display.textContent = num1 + ' ' + operator + ' ';
+            operatorExist = true;
         }
         else if (operatorExist === false) {
+            operator = operatorInArray.innerHTML;
+            operatorExist = true;
             display.textContent += ' ' + operator + ' ';
         }
-        operatorExist = true;
-
+        else if(operatorExist === true){
+            let nextOperator = operatorInArray.innerHTML;
+            operate(Number(num1), Number(num2), operator);
+            operator = nextOperator;
+            display.textContent = lastResult + ' ' + nextOperator + ' ';
+            num1 = lastResult;
+            num2 = '';
+            startnextOperation = false;
+        }
     }));
 
 equalBtn.addEventListener('click', function () {
