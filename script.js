@@ -1,8 +1,8 @@
 let num1 = '', num2 = '', operator = '';
-let result;
+let result = '';
+let lastResult = '';
 let operatorExist = false;
 let startnextOperation = false;
-let lastResult;
 
 const digits = Array.from(document.querySelector('#digits').children);
 const display = document.querySelector('#display');
@@ -15,7 +15,7 @@ digits.forEach(digit => digit.addEventListener('click', function () {
     if (startnextOperation === true) {
         clearFn();
     }
-    else if (operatorExist === false) {
+    if (operatorExist === false) {
         num1 += digit.innerHTML;
     }
     else {
@@ -111,6 +111,8 @@ function operate(num1, num2, operator) {
     }
     if (result !== 'Undefined') {
         const res = document.createElement('div');
+        if(!Number.isInteger(result))
+            result = result.toPrecision(4);
         res.textContent = result;
         display.append(res);
         startnextOperation = true;
