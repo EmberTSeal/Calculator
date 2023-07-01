@@ -39,7 +39,7 @@ operators.forEach(operatorInArray =>
             operatorExist = true;
             display.textContent += ' ' + operator + ' ';
         }
-        else if(operatorExist === true){
+        else if (operatorExist === true) {
             let nextOperator = operatorInArray.innerHTML;
             operate(Number(num1), Number(num2), operator);
             operator = nextOperator;
@@ -88,7 +88,15 @@ let subtract = (a, b) => (a - b);
 
 let multiply = (a, b) => a * b;
 
-let division = (a, b) => b ? a / b : 'NaN';
+function division(a, b) {
+    if (b != 0) {
+        return (a / b);
+    }
+    else {
+        alert('Division by 0 not allowed!');
+        return 'Undefined';
+    }
+}
 
 function operate(num1, num2, operator) {
     switch (operator) {
@@ -101,9 +109,14 @@ function operate(num1, num2, operator) {
         case '/': result = division(num1, num2);
             break;
     }
-    const res = document.createElement('div');
-    res.textContent = result;
-    display.append(res);
-    startnextOperation = true;
-    lastResult = result;
+    if (result !== 'Undefined') {
+        const res = document.createElement('div');
+        res.textContent = result;
+        display.append(res);
+        startnextOperation = true;
+        lastResult = result;
+    }
+    else {
+        num2 = '';
+    }
 }
