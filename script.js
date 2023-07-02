@@ -1,9 +1,11 @@
-let num1 = '', num2 = '', operator = '';
+let firstNumber = '';
+let secondNumber = '';
+let operator = '';
 let result = '';
-let lastResult = '';
-let operatorExist = false;
-let startnextOperation = false;
-let start = false;
+let lastResult = 0;
+let operatorExist = false;  //flag to determine if first number and operator input is done.
+let startnextOperation = false; //continue to next operation
+let startFirstTime = false;
 
 const digits = Array.from(document.querySelectorAll('.digit'));
 const display = document.querySelector('#display');
@@ -12,20 +14,28 @@ const equalBtn = document.querySelector('#equal');
 const clearBtn = document.querySelector('#clear');
 const previousAnswerBtn = document.querySelector('#ans');
 const res = document.querySelector('#result');
+const audio = document.querySelector('audio');
+
+document.querySelectorAll('button').forEach( 
+    button => button.addEventListener('click', function(){
+    audio.currentTime = 0;
+    audio.play();
+}));
 
 digits.forEach(digit => digit.addEventListener('click', function () {
-    if(start === false){
-        start = true; 
+    //to erase the 0 in display
+    if(startFirstTime === false){
+        startFirstTime = true; 
         display.textContent = '';
     }
     if (startnextOperation === true) {
         clearFn();
     }
     if (operatorExist === false) {
-        num1 += digit.innerHTML;
+        firstNumber += digit.innerHTML;
     }
     else {
-        num2 += digit.innerHTML;
+        secondNumber += digit.innerHTML;
     }
     display.textContent += digit.innerHTML;
 }));
@@ -35,58 +45,61 @@ operators.forEach(operatorInArray =>
         if (startnextOperation === true) {
             operator = operatorInArray.innerHTML;
             startnextOperation = false;
-            num1 = lastResult;
-            num2 = '';
-            display.textContent = num1 + ' ' + operator + ' ';
+            firstNumber = lastResult;
+            secondNumber = '';
+            display.textContent = firstNumber + ' ' + operator + ' ';
             operatorExist = true;
         }
-        else if (operatorExist === false) {
+        if (operatorExist === false) {
+            if(startFirstTime === false){
+                firstNumber = 0;
+            }
             operator = operatorInArray.innerHTML;
             operatorExist = true;
             display.textContent += ' ' + operator + ' ';
         }
         else if (operatorExist === true) {
             let nextOperator = operatorInArray.innerHTML;
-            operate(Number(num1), Number(num2), operator);
+            operate(Number(firstNumber), Number(secondNumber), operator);
             operator = nextOperator;
             display.textContent = lastResult + ' ' + nextOperator + ' ';
-            num1 = lastResult;
-            num2 = '';
+            firstNumber = lastResult;
+            secondNumber = '';
             startnextOperation = false;
         }
     }));
 
 equalBtn.addEventListener('click', function () {
-    if (num1 != '' && num2 != '') {
-        operate(Number(num1), Number(num2), operator);
+    if (firstNumber != '' && secondNumber != '') {
+        operate(Number(firstNumber), Number(secondNumber), operator);
     }
 });
 
 clearBtn.addEventListener('click', clearFn);
 
 function clearFn() {
-    start = false;
+    startFirstTime = false;
     display.textContent = '0';
     startnextOperation = false;
     operatorExist = false;
-    num1 = '';
-    num2 = '';
+    firstNumber = '';
+    secondNumber = '';
     result = '';
     res.textContent = '0';
 }
 
 previousAnswerBtn.addEventListener('click', function () {
     if (startnextOperation === true) {
-        num1 = lastResult;
-        display.textContent = num1;
+        firstNumber = lastResult;
+        display.textContent = firstNumber;
     }
     else if (operatorExist === false && startnextOperation === false) {
-        num1 += lastResult;
-        display.textContent = num1;
+        firstNumber += lastResult;
+        display.textContent = firstNumber;
     }
     else if (operatorExist === true) {
-        num2 = lastResult;
-        display.textContent += num2;
+        secondNumber += lastResult;
+        display.textContent += lastResult;
     }
 })
 
@@ -106,15 +119,15 @@ function division(a, b) {
     }
 }
 
-function operate(num1, num2, operator) {
+function operate(firstNumber, secondNumber, operator) {
     switch (operator) {
-        case '+': result = add(num1, num2);
+        case '+': result = add(firstNumber, secondNumber);
             break;
-        case '-': result = subtract(num1, num2);
+        case '-': result = subtract(firstNumber, secondNumber);
             break;
-        case '*': result = multiply(num1, num2);
+        case '*': result = multiply(firstNumber, secondNumber);
             break;
-        case '/': result = division(num1, num2);
+        case '/': result = division(firstNumber, secondNumber);
             break;
     }
     if (result !== 'Undefined') {
@@ -125,6 +138,6 @@ function operate(num1, num2, operator) {
         lastResult = result;
     }
     else {
-        num2 = '';
+        secondNumber = '';
     }
 }
