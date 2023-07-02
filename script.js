@@ -1,46 +1,49 @@
 //use 0 as operand1 by default
-let operand1 = 0;    
+let operand1 = 0;
 let operand2 = '';
 let operator = '';
 let result = '';
 //for storing the result of last calculation
-let lastResult = 0; 
+let lastResult = 0;
 //flag to determine if first number and operator input is done
-let operatorExist = false;  
+let operatorExist = false;
 //flag to determine if one operation ended and next operation can be continued
-let startnextOperation = false; 
+let startnextOperation = false;
 
 const digits = Array.from(document.querySelectorAll('.digit'));
 const display = document.querySelector('#display');
 const operators = Array.from(document.querySelectorAll('.operator'));
 const equalBtn = document.querySelector('#equal');
+const deleteBtn = document.querySelector('#delete');
 const clearBtn = document.querySelector('#clear');
 const percentageBtn = document.querySelector('#percentage');
 const previousAnswerBtn = document.querySelector('#ans');
 const res = document.querySelector('#result');
 const audio = document.querySelector('audio');
 
-document.querySelectorAll('button').forEach( 
-    button => button.addEventListener('click', function(){
-    audio.currentTime = 0;
-    audio.play();
-}));
+document.querySelectorAll('button').forEach(
+    button => button.addEventListener('click', function () {
+        audio.currentTime = 0;
+        audio.play();
+    }));
 
 digits.forEach(digit => digit.addEventListener('click', function () {
     //clear previous numbers if next operation is to be started
     if (startnextOperation === true) {
         clearFn();
     }
-    if(display.textContent === '0'){
+    if (display.textContent === '0') {
         display.textContent = '';
     }
     //if operand1 input not done, input it
     if (operatorExist === false) {
         operand1 += digit.innerHTML;
+        operand1 = parseInt(operand1).toString();
     }
     //else input operand2
     else {
         operand2 += digit.innerHTML;
+        operand2 = parseInt(operand2).toString();
     }
     display.textContent += digit.innerHTML;
 }));
@@ -69,7 +72,7 @@ equalBtn.addEventListener('click', function () {
     // only operate when both numbers have been inputted
     if (operand1 !== '' && operand2 !== '') {
         operate(Number(operand1), Number(operand2), operator);
-        
+
     }
 });
 
@@ -82,10 +85,38 @@ function clearFn() {
     resetVariables();
 }
 
+deleteBtn.addEventListener('click', function () {
+    //to delete first number
+    if (operatorExist === false && operand1 !== '') {
+        operand1 = deleteFromLast(operand1);
+        if (operand1 === '') {
+            display.textContent = '0';
+            operand1 = 0;
+        }
+        else
+            display.textContent = operand1;
+    }
+    else if (operand2 !== '' && operatorExist === true) {
+        operand2 = deleteFromLast(operand2);
+        display.textContent = operand1 + ' ' + operator + ' ' + operand2;
+    }
+    else if(operatorExist === true && operand2 === ''){
+        operator = '';
+        operatorExist = false;
+        display.textContent = operand1 + ' ';
+    }
+});
 
-percentageBtn.addEventListener('click', function(){
+function deleteFromLast(operand) {
+    operand = Array.from(operand);
+    operand.pop();
+    operand = operand.join('');
+    return operand;
+}
+
+percentageBtn.addEventListener('click', function () {
     console.log('here');
-    operand1 = Number(operand1)/100;
+    operand1 = Number(operand1) / 100;
     res.textContent = operand1;
     display.textContent = operand1;
 });
@@ -93,7 +124,7 @@ percentageBtn.addEventListener('click', function(){
 //use lastResult for next operations
 previousAnswerBtn.addEventListener('click', function () {
     //if display already contains 0, don't add another 0
-    if(display.textContent === '0')
+    if (display.textContent === '0')
         return;
     //for using lastresult completely as operand1
     if (startnextOperation === true) {
@@ -113,7 +144,7 @@ previousAnswerBtn.addEventListener('click', function () {
     }
 });
 
-function resetVariables(){
+function resetVariables() {
     startnextOperation = false;
     operatorExist = false;
     operand1 = 0;
@@ -147,12 +178,12 @@ function operate(operand1, operand2, operator) {
         case '*': result = multiply(operand1, operand2);
             break;
         case '/': result = division(operand1, operand2);
-            break;    
+            break;
         default: result = 'error';
     }
     // only display result if it is a number
     if (result !== 'error') {
-        if(!Number.isInteger(result))
+        if (!Number.isInteger(result))
             result = result.toPrecision(4);
         res.innerHTML = result;
         startnextOperation = true;
@@ -160,6 +191,6 @@ function operate(operand1, operand2, operator) {
     }
     else {
         operand2 = '';
-        display.textContent = operand1 + ' ' + operator + ' ' ;
+        display.textContent = operand1 + ' ' + operator + ' ';
     }
 }
