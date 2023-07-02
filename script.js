@@ -1,6 +1,6 @@
-//use 0 as firstNumber by default
-let firstNumber = 0;    
-let secondNumber = '';
+//use 0 as operand1 by default
+let operand1 = 0;    
+let operand2 = '';
 let operator = '';
 let result = '';
 //for storing the result of last calculation
@@ -20,7 +20,6 @@ const previousAnswerBtn = document.querySelector('#ans');
 const res = document.querySelector('#result');
 const audio = document.querySelector('audio');
 
-// to play audio for when clicking a button
 document.querySelectorAll('button').forEach( 
     button => button.addEventListener('click', function(){
     audio.currentTime = 0;
@@ -32,27 +31,19 @@ digits.forEach(digit => digit.addEventListener('click', function () {
     if (startnextOperation === true) {
         clearFn();
     }
-    //to erase the 0 in display
     if(display.textContent === '0'){
         display.textContent = '';
     }
-    //if first number input not done, input it
+    //if operand1 input not done, input it
     if (operatorExist === false) {
-        firstNumber += digit.innerHTML;
+        operand1 += digit.innerHTML;
     }
-    //else input second number
+    //else input operand2
     else {
-        secondNumber += digit.innerHTML;
+        operand2 += digit.innerHTML;
     }
     display.textContent += digit.innerHTML;
 }));
-
-percentageBtn.addEventListener('click', function(){
-    console.log('here');
-    firstNumber = Number(firstNumber)/100;
-    res.textContent = firstNumber;
-    display.textContent = firstNumber;
-});
 
 operators.forEach(operatorInArray =>
     operatorInArray.addEventListener('click', function () {
@@ -65,19 +56,19 @@ operators.forEach(operatorInArray =>
         //to enable chaining operations together, evaluating a pair at one time
         else if (operatorExist === true || startnextOperation === true) {
             let nextOperator = operatorInArray.innerHTML;
-            operate(Number(firstNumber), Number(secondNumber), operator);
+            operate(Number(operand1), Number(operand2), operator);
             operator = nextOperator;
             display.textContent = lastResult + ' ' + nextOperator + ' ';
-            firstNumber = lastResult;
-            secondNumber = '';
+            operand1 = lastResult;
+            operand2 = '';
             startnextOperation = false;
         }
     }));
 
 equalBtn.addEventListener('click', function () {
     // only operate when both numbers have been inputted
-    if (firstNumber !== '' && secondNumber !== '') {
-        operate(Number(firstNumber), Number(secondNumber), operator);
+    if (operand1 !== '' && operand2 !== '') {
+        operate(Number(operand1), Number(operand2), operator);
         
     }
 });
@@ -87,36 +78,49 @@ clearBtn.addEventListener('click', clearFn);
 //reset all flags and variables EXCEPT lastResult
 function clearFn() {
     display.textContent = '0';
-    startnextOperation = false;
-    operatorExist = false;
-    firstNumber = 0;
-    secondNumber = '';
-    result = '';
     res.textContent = '0';
+    resetVariables();
 }
+
+
+percentageBtn.addEventListener('click', function(){
+    console.log('here');
+    operand1 = Number(operand1)/100;
+    res.textContent = operand1;
+    display.textContent = operand1;
+});
 
 //use lastResult for next operations
 previousAnswerBtn.addEventListener('click', function () {
-    //if it already contains 0, don't add another 0
+    //if display already contains 0, don't add another 0
     if(display.textContent === '0')
         return;
-    //for using lastresult completely as firstNumber
+    //for using lastresult completely as operand1
     if (startnextOperation === true) {
-        firstNumber = lastResult;
-        display.textContent = firstNumber;
+        operand1 = lastResult;
+        display.textContent = operand1;
     }
-    //for adding lastresult to existing firstNumber
+    //for adding lastresult to existing operand1
     else if (operatorExist === false && startnextOperation === false) {
-        firstNumber = parseInt(firstNumber).toString()
-        firstNumber += lastResult;
-        display.textContent = firstNumber;
+        operand1 = parseInt(operand1).toString()
+        operand1 += lastResult;
+        display.textContent = operand1;
     }
-    //for adding lastresult to secondNumber
+    //for adding lastresult to operand2
     else if (operatorExist === true) {
-        secondNumber += lastResult;
+        operand2 += lastResult;
         display.textContent += lastResult;
     }
-})
+});
+
+function resetVariables(){
+    startnextOperation = false;
+    operatorExist = false;
+    operand1 = 0;
+    operand2 = '';
+    result = '';
+}
+
 
 let add = (a, b) => (a + b);
 
@@ -129,25 +133,25 @@ function division(a, b) {
         return (a / b);
     }
     else {
-        alert('Division by 0 not allowed!');
-        return 'Undefined';
+        res.textContent = "ERROR!";
+        return 'error';
     }
 }
 
-function operate(firstNumber, secondNumber, operator) {
+function operate(operand1, operand2, operator) {
     switch (operator) {
-        case '+': result = add(firstNumber, secondNumber);
+        case '+': result = add(operand1, operand2);
             break;
-        case '-': result = subtract(firstNumber, secondNumber);
+        case '-': result = subtract(operand1, operand2);
             break;
-        case '*': result = multiply(firstNumber, secondNumber);
+        case '*': result = multiply(operand1, operand2);
             break;
-        case '/': result = division(firstNumber, secondNumber);
+        case '/': result = division(operand1, operand2);
             break;    
-        default: result = 'Undefined';
+        default: result = 'error';
     }
     // only display result if it is a number
-    if (result !== 'Undefined') {
+    if (result !== 'error') {
         if(!Number.isInteger(result))
             result = result.toPrecision(4);
         res.innerHTML = result;
@@ -155,6 +159,7 @@ function operate(firstNumber, secondNumber, operator) {
         lastResult = result;
     }
     else {
-        secondNumber = '';
+        operand2 = '';
+        display.textContent = operand1 + ' ' + operator + ' ' ;
     }
 }
