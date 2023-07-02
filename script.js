@@ -15,6 +15,7 @@ const display = document.querySelector('#display');
 const operators = Array.from(document.querySelectorAll('.operator'));
 const equalBtn = document.querySelector('#equal');
 const clearBtn = document.querySelector('#clear');
+const percentageBtn = document.querySelector('#percentage');
 const previousAnswerBtn = document.querySelector('#ans');
 const res = document.querySelector('#result');
 const audio = document.querySelector('audio');
@@ -45,6 +46,13 @@ digits.forEach(digit => digit.addEventListener('click', function () {
     }
     display.textContent += digit.innerHTML;
 }));
+
+percentageBtn.addEventListener('click', function(){
+    console.log('here');
+    firstNumber = Number(firstNumber)/100;
+    res.textContent = firstNumber;
+    display.textContent = firstNumber;
+});
 
 operators.forEach(operatorInArray =>
     operatorInArray.addEventListener('click', function () {
