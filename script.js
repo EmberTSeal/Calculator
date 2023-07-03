@@ -40,10 +40,39 @@ document.querySelectorAll('button').forEach(
         audio.play();
     }));
 
+//handle keyboard inputs
+document.addEventListener('keydown', function (e) {
+    let digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    let operators = ['+', '-', '*', '/'];
+    if (digits.includes(e.key))
+        digitsHandler(e.key);
+    else if (operators.includes(e.key))
+        operatorsHandler(e.key);
+    else if (e.key === '.')
+        dotBtnHandler();
+    else if (e.key === '%')
+        percentageBtnHandler();
+
+    else if (e.key === '=' || e.key === 'Enter')
+        equalBtnHandler();
+
+    else if (e.key === 'c' || e.key === 'C')
+        clearBtnHandler();
+
+    else if (e.key === 'a' || e.key === 'A')
+        previousAnswerBtnHandler();
+    else if (e.key === 'Delete' || e.key === 'Backspace')
+        deleteBtnHandler();
+});
+
 digits.forEach(digit => digit.addEventListener('click', function () {
+    digitsHandler(digit.innerHTML);
+}));
+
+function digitsHandler(input) {
     //clear previous numbers if next operation is to be started
     if (startnextOperation === true) {
-        clearFn();
+        clearBtnHandler();
     }
     if (display.textContent === '0') {
         display.textContent = '';
@@ -52,7 +81,7 @@ digits.forEach(digit => digit.addEventListener('click', function () {
     if (operatorExist === false) {
         if (operand1.toString().length === maxInputSize)
             return;
-        operand1 += digit.innerHTML;
+        operand1 += input;
         operand1 = parseFloat(operand1).toString();
 
     }
@@ -63,42 +92,45 @@ digits.forEach(digit => digit.addEventListener('click', function () {
         else if (operand2.toString().length + operand1.toString().length === maxCharsInLine) {
             increaseScreenSize();
         }
-        operand2 += digit.innerHTML;
+        operand2 += input;
         operand2 = parseFloat(operand2).toString();
     }
-    display.textContent += digit.innerHTML;
-}));
+    display.textContent += input;
+}
 
 operators.forEach(operatorInArray =>
     operatorInArray.addEventListener('click', function () {
-        //for first operation: if operator hasn't been inputted yet
-        if (operatorExist === false) {
-            operator = operatorInArray.innerHTML;
-            operatorExist = true;
-            display.textContent += ' ' + operator + ' ';
-        }
-        //to enable chaining operations together, evaluating a pair at one time
-        else if ((operatorExist === true && operand2 !== '') || startnextOperation === true) {
-            let nextOperator = operatorInArray.innerHTML;
-            operate();
-            operator = nextOperator;
-            display.textContent = lastResult + ' ' + nextOperator + ' ';
-            operand1 = lastResult;
-            operand2 = '';
-            startnextOperation = false;
-        }
-        //clicking operators multiple times
-        else if (operatorExist === true && operand2 === '') {
-            operator = operatorInArray.innerHTML;
-            display.textContent = operand1 + ' ' + operator + ' ';
-        }
+        operatorsHandler(operatorInArray.innerHTML);
     }));
 
+function operatorsHandler(operatorInArray) {
+    //for first operation: if operator hasn't been inputted yet
+    if (operatorExist === false) {
+        operator = operatorInArray;
+        operatorExist = true;
+        display.textContent += ' ' + operator + ' ';
+    }
+    //to enable chaining operations together, evaluating a pair at one time
+    else if ((operatorExist === true && operand2 !== '') || startnextOperation === true) {
+        let nextOperator = operatorInArray;
+        operate();
+        operator = nextOperator;
+        display.textContent = lastResult + ' ' + nextOperator + ' ';
+        operand1 = lastResult;
+        operand2 = '';
+        startnextOperation = false;
+    }
+    //clicking operators multiple times
+    else if (operatorExist === true && operand2 === '') {
+        operator = operatorInArray
+        display.textContent = operand1 + ' ' + operator + ' ';
+    }
+}
 
-clearBtn.addEventListener('click', clearFn);
+clearBtn.addEventListener('click', clearBtnHandler);
 
 //reset all flags, variables and screensize [EXCEPT lastResult]
-function clearFn() {
+function clearBtnHandler() {
     display.textContent = '0';
     res.textContent = '0';
     resetVariables();
@@ -115,7 +147,9 @@ function resetVariables() {
     reset = true;
 }
 
-deleteBtn.addEventListener('click', function () {
+deleteBtn.addEventListener('click', deleteBtnHandler);
+
+function deleteBtnHandler() {
     //if operand1 completely deleted, display should have 0
     if (operatorExist === false && operand1 !== '') {
         operand1 = deleteFromLast(operand1);
@@ -137,7 +171,7 @@ deleteBtn.addEventListener('click', function () {
         operatorExist = false;
         display.textContent = operand1 + ' ';
     }
-});
+}
 
 function deleteFromLast(operand) {
     operand = Array.from(operand);
@@ -146,7 +180,9 @@ function deleteFromLast(operand) {
     return operand;
 }
 
-percentageBtn.addEventListener('click', function () {
+percentageBtn.addEventListener('click', percentageBtnHandler);
+
+function percentageBtnHandler() {
     if (operatorExist === false) {
         operand1 = Number(operand1) / 100;
         display.textContent = operand1;
@@ -155,9 +191,11 @@ percentageBtn.addEventListener('click', function () {
         operand2 = Number(operand2) / 100;
         updateFullDisplay();
     }
-});
+}
 
-dotBtn.addEventListener('click', function () {
+dotBtn.addEventListener('click', dotBtnHandler);
+
+function dotBtnHandler() {
     if (operatorExist === false) {
         operand1 = addDot(operand1);
         display.textContent = operand1;
@@ -166,9 +204,10 @@ dotBtn.addEventListener('click', function () {
         operand2 = addDot(operand2);
         updateFullDisplay();
     }
-});
+}
 
 function addDot(operand) {
+    console.log(operand.includes('.'));
     let dotExists = Array.from(operand.toString()).indexOf('.');
     //display as '0.22' instead of '.22'
     if (operand === '')
@@ -179,7 +218,9 @@ function addDot(operand) {
     return operand;
 }
 
-previousAnswerBtn.addEventListener('click', function () {
+previousAnswerBtn.addEventListener('click', previousAnswerBtnHandler);
+
+function previousAnswerBtnHandler() {
     //do not allow for large results
     if (lastResult.toString().length >= maxInputSize) {
         return;
@@ -224,15 +265,17 @@ previousAnswerBtn.addEventListener('click', function () {
         }
         updateFullDisplay();
     }
-});
+}
 
-equalBtn.addEventListener('click', function () {
+equalBtn.addEventListener('click', equalBtnHandler);
+
+function equalBtnHandler() {
     // only operate when both numbers and operator have been inputted
-    if (operand1 !== '' && operand2 !== '' && operator!=='') {
+    if (operand1 !== '' && operand2 !== '' && operator !== '') {
         operate();
 
     }
-});
+}
 
 function operate() {
     operand1 = parseFloat(operand1);
