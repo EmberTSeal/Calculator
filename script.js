@@ -9,6 +9,8 @@ let lastResult = 0;
 let operatorExist = false;
 //flag to determine if one operation ended and next operation can be continued
 let startnextOperation = false;
+//if reset has been performed
+let reset = false;
 
 const digits = Array.from(document.querySelectorAll('.digit'));
 const display = document.querySelector('#display');
@@ -59,7 +61,7 @@ operators.forEach(operatorInArray =>
         //to enable chaining operations together, evaluating a pair at one time
         else if (operatorExist === true || startnextOperation === true) {
             let nextOperator = operatorInArray.innerHTML;
-            operate(Number(operand1), Number(operand2), operator);
+            operate();
             operator = nextOperator;
             display.textContent = lastResult + ' ' + nextOperator + ' ';
             operand1 = lastResult;
@@ -71,7 +73,7 @@ operators.forEach(operatorInArray =>
 equalBtn.addEventListener('click', function () {
     // only operate when both numbers have been inputted
     if (operand1 !== '' && operand2 !== '') {
-        operate(Number(operand1), Number(operand2), operator);
+        operate();
 
     }
 });
@@ -100,7 +102,7 @@ deleteBtn.addEventListener('click', function () {
         operand2 = deleteFromLast(operand2);
         display.textContent = operand1 + ' ' + operator + ' ' + operand2;
     }
-    else if(operatorExist === true && operand2 === ''){
+    else if (operatorExist === true && operand2 === '') {
         operator = '';
         operatorExist = false;
         display.textContent = operand1 + ' ';
@@ -123,24 +125,44 @@ percentageBtn.addEventListener('click', function () {
 
 //use lastResult for next operations
 previousAnswerBtn.addEventListener('click', function () {
-    //if display already contains 0, don't add another 0
-    if (display.textContent === '0')
+    //to disable 0 duplication
+    if (display.textContent === '0' && lastResult === 0)
         return;
     //for using lastresult completely as operand1
-    if (startnextOperation === true) {
+    if (startnextOperation === true || reset === true) {
         operand1 = lastResult;
         display.textContent = operand1;
+        startnextOperation = false;
+        operator = '';
+        operand2 = '';
+        operatorExist = false;
+        if(reset === true)
+            reset = false;
     }
     //for adding lastresult to existing operand1
     else if (operatorExist === false && startnextOperation === false) {
-        operand1 = parseInt(operand1).toString()
-        operand1 += lastResult;
+        operand1 = parseInt(operand1).toString();
+        if (lastResult >= 0)
+            operand1 += lastResult;
+        else {
+            operand1 += Math.abs(lastResult);
+        }
         display.textContent = operand1;
     }
     //for adding lastresult to operand2
     else if (operatorExist === true) {
-        operand2 += lastResult;
-        display.textContent += lastResult;
+        if (operand2 === ''){
+            operand2 = lastResult;
+        }   
+        else {
+            operand2 = parseInt(operand2).toString();
+            if (lastResult >= 0)
+                operand2 += lastResult;
+            else {
+                operand2 += Math.abs(lastResult);
+            }
+        }
+        display.textContent = operand1 + ' ' + operator + ' ' + operand2;
     }
 });
 
@@ -150,6 +172,7 @@ function resetVariables() {
     operand1 = 0;
     operand2 = '';
     result = '';
+    reset = true;
 }
 
 
@@ -169,7 +192,9 @@ function division(a, b) {
     }
 }
 
-function operate(operand1, operand2, operator) {
+function operate() {
+    operand1 = parseInt(operand1);
+    operand2 = parseInt(operand2);
     switch (operator) {
         case '+': result = add(operand1, operand2);
             break;
