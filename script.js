@@ -59,7 +59,7 @@ operators.forEach(operatorInArray =>
             display.textContent += ' ' + operator + ' ';
         }
         //to enable chaining operations together, evaluating a pair at one time
-        else if (operatorExist === true || startnextOperation === true) {
+        else if ((operatorExist === true && operand2!=='')|| startnextOperation === true) {
             let nextOperator = operatorInArray.innerHTML;
             operate();
             operator = nextOperator;
@@ -67,6 +67,11 @@ operators.forEach(operatorInArray =>
             operand1 = lastResult;
             operand2 = '';
             startnextOperation = false;
+        }
+        //clicking operators multiple times
+        else if(operatorExist === true && operand2 === ''){
+            operator = operatorInArray.innerHTML;
+            display.textContent = operand1 + ' ' + operator + ' ';
         }
     }));
 
