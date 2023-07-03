@@ -39,11 +39,19 @@ digits.forEach(digit => digit.addEventListener('click', function () {
     }
     //if operand1 input not done, input it
     if (operatorExist === false) {
+        if (operand1.toString().length === 16)
+            return;
         operand1 += digit.innerHTML;
         operand1 = parseInt(operand1).toString();
+
     }
     //else input operand2
     else {
+        if (operand2.toString().length === 16)
+            return;
+        else if (operand2.toString().length + operand1.toString().length === 22) {
+            increaseScreenSize();
+        }
         operand2 += digit.innerHTML;
         operand2 = parseInt(operand2).toString();
     }
@@ -59,7 +67,7 @@ operators.forEach(operatorInArray =>
             display.textContent += ' ' + operator + ' ';
         }
         //to enable chaining operations together, evaluating a pair at one time
-        else if ((operatorExist === true && operand2!=='')|| startnextOperation === true) {
+        else if ((operatorExist === true && operand2 !== '') || startnextOperation === true) {
             let nextOperator = operatorInArray.innerHTML;
             operate();
             operator = nextOperator;
@@ -69,7 +77,7 @@ operators.forEach(operatorInArray =>
             startnextOperation = false;
         }
         //clicking operators multiple times
-        else if(operatorExist === true && operand2 === ''){
+        else if (operatorExist === true && operand2 === '') {
             operator = operatorInArray.innerHTML;
             display.textContent = operand1 + ' ' + operator + ' ';
         }
@@ -130,6 +138,10 @@ percentageBtn.addEventListener('click', function () {
 
 //use lastResult for next operations
 previousAnswerBtn.addEventListener('click', function () {
+    //do not allow for large results
+    if (lastResult.toString().length >= 16) {
+        return;
+    }
     //to disable 0 duplication
     if (display.textContent === '0' && lastResult === 0)
         return;
@@ -141,7 +153,7 @@ previousAnswerBtn.addEventListener('click', function () {
         operator = '';
         operand2 = '';
         operatorExist = false;
-        if(reset === true)
+        if (reset === true)
             reset = false;
     }
     //for adding lastresult to existing operand1
@@ -156,9 +168,9 @@ previousAnswerBtn.addEventListener('click', function () {
     }
     //for adding lastresult to operand2
     else if (operatorExist === true) {
-        if (operand2 === ''){
+        if (operand2 === '') {
             operand2 = lastResult;
-        }   
+        }
         else {
             operand2 = parseInt(operand2).toString();
             if (lastResult >= 0)
@@ -177,6 +189,8 @@ function resetVariables() {
     operand1 = 0;
     operand2 = '';
     result = '';
+    document.querySelector('.calculator').style.height = '';
+    document.querySelector('#display-box').style.height = '';
     reset = true;
 }
 
@@ -214,7 +228,7 @@ function operate() {
     // only display result if it is a number
     if (result !== 'error') {
         if (!Number.isInteger(result))
-            result = result.toPrecision(4);
+            result = Math.round((result + Number.EPSILON) * 100) / 100;
         res.innerHTML = result;
         startnextOperation = true;
         lastResult = result;
@@ -223,4 +237,9 @@ function operate() {
         operand2 = '';
         display.textContent = operand1 + ' ' + operator + ' ';
     }
+}
+
+function increaseScreenSize() {
+    document.querySelector('.calculator').style.height = '450px';
+    document.querySelector('#display-box').style.height = '100px';
 }
