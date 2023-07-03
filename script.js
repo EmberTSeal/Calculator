@@ -19,6 +19,7 @@ const equalBtn = document.querySelector('#equal');
 const deleteBtn = document.querySelector('#delete');
 const clearBtn = document.querySelector('#clear');
 const percentageBtn = document.querySelector('#percentage');
+const dotBtn = document.querySelector('#dot');
 const previousAnswerBtn = document.querySelector('#ans');
 const res = document.querySelector('#result');
 const audio = document.querySelector('audio');
@@ -42,7 +43,7 @@ digits.forEach(digit => digit.addEventListener('click', function () {
         if (operand1.toString().length === 16)
             return;
         operand1 += digit.innerHTML;
-        operand1 = parseInt(operand1).toString();
+        operand1 = parseFloat(operand1).toString();
 
     }
     //else input operand2
@@ -53,7 +54,7 @@ digits.forEach(digit => digit.addEventListener('click', function () {
             increaseScreenSize();
         }
         operand2 += digit.innerHTML;
-        operand2 = parseInt(operand2).toString();
+        operand2 = parseFloat(operand2).toString();
     }
     display.textContent += digit.innerHTML;
 }));
@@ -130,11 +131,31 @@ function deleteFromLast(operand) {
 }
 
 percentageBtn.addEventListener('click', function () {
-    console.log('here');
     operand1 = Number(operand1) / 100;
     res.textContent = operand1;
     display.textContent = operand1;
 });
+
+
+dotBtn.addEventListener('click', function () {
+    if (operatorExist === false) {
+       operand1 = addDot(operand1);
+       display.textContent = operand1;
+    }
+    else{
+        operand2 = addDot(operand2);
+        display.textContent = operand1 + ' ' + operator + ' ' + operand2;
+    }
+});
+
+function addDot(operand) {
+    let dotExists = Array.from(operand.toString()).indexOf('.');
+    if(operand=== '')
+        operand += '0';
+    if (dotExists === -1)
+        operand += '.';
+    return operand;
+}
 
 //use lastResult for next operations
 previousAnswerBtn.addEventListener('click', function () {
@@ -158,7 +179,7 @@ previousAnswerBtn.addEventListener('click', function () {
     }
     //for adding lastresult to existing operand1
     else if (operatorExist === false && startnextOperation === false) {
-        operand1 = parseInt(operand1).toString();
+        operand1 = parseFloat(operand1).toString();
         if (lastResult >= 0)
             operand1 += lastResult;
         else {
@@ -172,7 +193,7 @@ previousAnswerBtn.addEventListener('click', function () {
             operand2 = lastResult;
         }
         else {
-            operand2 = parseInt(operand2).toString();
+            operand2 = parseFloat(operand2).toString();
             if (lastResult >= 0)
                 operand2 += lastResult;
             else {
@@ -212,8 +233,8 @@ function division(a, b) {
 }
 
 function operate() {
-    operand1 = parseInt(operand1);
-    operand2 = parseInt(operand2);
+    operand1 = parseFloat(operand1);
+    operand2 = parseFloat(operand2);
     switch (operator) {
         case '+': result = add(operand1, operand2);
             break;
@@ -228,7 +249,7 @@ function operate() {
     // only display result if it is a number
     if (result !== 'error') {
         if (!Number.isInteger(result))
-            result = Math.round((result + Number.EPSILON) * 100) / 100;
+            result = Math.round((result + Number.EPSILON) * 1000000) / 1000000;
         res.innerHTML = result;
         startnextOperation = true;
         lastResult = result;
