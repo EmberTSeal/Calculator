@@ -84,3 +84,22 @@ a {
     color: black;
     text-decoration-color: #205b7a;
 }
+
+#controls{
+    text-align: center;
+    color: white;
+    font-size: 15px;
+}
+
+#controls ul{
+    cursor: pointer;
+}
+
+li{
+    list-style: none;
+    display: none;
+}
+
+.show{
+    display:block;
+}

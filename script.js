@@ -28,11 +28,17 @@ const dotBtn = document.querySelector('#dot');
 const previousAnswerBtn = document.querySelector('#ans');
 const res = document.querySelector('#result');
 const audio = document.querySelector('audio');
+const showControlsBtn = document.querySelector('#controls');
 
 function increaseScreenSize() {
     document.querySelector('.calculator').style.height = '450px';
     document.querySelector('#display-box').style.height = '100px';
 }
+
+showControlsBtn.addEventListener('click', function(){
+    showControlsBtn.querySelectorAll('li')
+    .forEach( listItem => listItem.classList.toggle('show'));
+});
 
 document.querySelectorAll('button').forEach(
     button => button.addEventListener('click', function () {
@@ -207,7 +213,6 @@ function dotBtnHandler() {
 }
 
 function addDot(operand) {
-    console.log(operand.includes('.'));
     let dotExists = Array.from(operand.toString()).indexOf('.');
     //display as '0.22' instead of '.22'
     if (operand === '')
@@ -326,3 +331,4 @@ function division(a, b) {
 function updateFullDisplay() {
     display.textContent = operand1 + ' ' + operator + ' ' + operand2;
 }
+
