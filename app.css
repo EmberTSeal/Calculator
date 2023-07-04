@@ -5,7 +5,7 @@
 
 body {
     background-color: #000f1b;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -13,6 +13,7 @@ body {
 }
 
 .calculator {
+    margin-top:40px;
     height: 400px;
     width: 310px;
     background-color: #1d3849;
@@ -91,8 +92,13 @@ a {
     font-size: 15px;
 }
 
-#controls ul{
+#controls{
+    padding-top: 20px;
     cursor: pointer;
+}
+
+ul{
+    padding: 0;
 }
 
 li{
