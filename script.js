@@ -35,40 +35,55 @@ function increaseScreenSize() {
     document.querySelector('#display-box').style.height = '100px';
 }
 
-showControlsBtn.addEventListener('click', function(){
+showControlsBtn.addEventListener('click', function () {
     showControlsBtn.querySelectorAll('li')
-    .forEach( listItem => listItem.classList.toggle('show'));
+        .forEach(listItem => listItem.classList.toggle('show'));
 });
 
 document.querySelectorAll('button').forEach(
-    button => button.addEventListener('click', function () {
-        audio.currentTime = 0;
-        audio.play();
-    }));
+    button => button.addEventListener('click', soundEffect));
+
+function soundEffect() {
+    audio.currentTime = 0;
+    audio.play();
+}
 
 //handle keyboard inputs
 document.addEventListener('keydown', function (e) {
     let digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     let operators = ['+', '-', '*', '/'];
-    if (digits.includes(e.key))
+    if (digits.includes(e.key)){
         digitsHandler(e.key);
-    else if (operators.includes(e.key))
+        soundEffect();
+    }
+    else if (operators.includes(e.key)){
         operatorsHandler(e.key);
-    else if (e.key === '.')
+        soundEffect();
+    }
+    else if (e.key === '.'){
         dotBtnHandler();
-    else if (e.key === '%')
+        soundEffect();
+    }
+    else if (e.key === '%'){
         percentageBtnHandler();
-
-    else if (e.key === '=' || e.key === 'Enter')
+        soundEffect();
+    }
+    else if (e.key === '=' || e.key === 'Enter'){
         equalBtnHandler();
-
-    else if (e.key === 'c' || e.key === 'C')
+        soundEffect();
+    }
+    else if (e.key === 'c' || e.key === 'C'){
         clearBtnHandler();
-
-    else if (e.key === 'a' || e.key === 'A')
+        soundEffect();
+    }
+    else if (e.key === 'a' || e.key === 'A'){
         previousAnswerBtnHandler();
-    else if (e.key === 'Delete' || e.key === 'Backspace')
+        soundEffect();
+    }
+    else if (e.key === 'Delete' || e.key === 'Backspace'){
         deleteBtnHandler();
+        soundEffect();
+    }
 });
 
 digits.forEach(digit => digit.addEventListener('click', function () {
