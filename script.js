@@ -143,7 +143,7 @@ function operatorsHandler(operatorInArray) {
     }
     //clicking operators multiple times
     else if (operatorExist === true && operand2 === '') {
-        operator = operatorInArray
+        operator = operatorInArray;
         display.textContent = operand1 + ' ' + operator + ' ';
     }
 }
